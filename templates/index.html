@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CI/CD Learning Lab</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>CI/CD Learning Lab</h1>
+    <p>Learn CI/CD through practical exercises.</p>
+
+    <h2>Learning Modules</h2>
+    <div id="lessons"></div>
+
+    <h2>Pipeline Simulator</h2>
+    <button onclick="runPipeline()">Run Pipeline</button>
+    <div id="status"></div>
+
+    <script src="{{ url_for('static', filename='script.js') }}">
+    </script>
+</body>
+</html>
