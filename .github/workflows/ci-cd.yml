@@ -1,4 +1,3 @@
-
 name: Python CI CD Pipeline
 
 on:
@@ -40,7 +39,7 @@ jobs:
     steps:
       - name: Trigger Render deployment
         env:
-          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_URL }}
         run: |
           if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
             echo "Render deploy hook secret is not configured."
