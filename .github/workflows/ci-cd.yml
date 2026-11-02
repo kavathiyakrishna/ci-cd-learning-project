@@ -4,23 +4,20 @@ name: Python CI CD Pipeline
 on:
   push:
     branches: [main]
-
   pull_request:
     branches: [main]
 
 jobs:
-
   test:
     name: Python Testing
-
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
@@ -29,22 +26,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - - name: Run tests
-  run: python -m pytest -v
-  env:
-    PYTHONPATH: .
+      - name: Run tests
+        run: python -m pytest -v
+        env:
+          PYTHONPATH: .
 
   deploy:
     name: Deploy Flask Application
-
     needs: test
-
-    if: github.event_name == 'push'
-
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Trigger Render Deployment
+      - name: Trigger Render deployment
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
-          curl -X POST \
-            "${{ secrets.RENDER_DEPLOY_HOOK }}"
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "Render deploy hook secret is not configured."
+            exit 1
+          fi
+          curl --fail --request POST "$RENDER_DEPLOY_HOOK_URL"
